@@ -220,9 +220,10 @@ with tab1:
 
     st.divider()
     st.subheader("Patrimônio vs Idade do Fundo")
-    if len(df_filtrado) >= 2:
+    df_scatter = df_filtrado[df_filtrado["pl_milhoes"] > 0]
+    if len(df_scatter) >= 2:
         fig = px.scatter(
-            df_filtrado,
+            df_scatter,
             x="idade_anos",
             y="pl_milhoes",
             color="classe",
