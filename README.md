@@ -1,108 +1,68 @@
-# Analise de Fundos de Investimento — Python + AWS
+# Analytics de Fundos de Investimento BR 📊📈
 
-Estudo sobre o mercado brasileiro de fundos de investimento usando dados publicos e Python. O notebook vai da coleta ate a visualizacao, passando por limpeza, analise exploratoria e uma discussao sobre como esse pipeline escalaria pra cloud.
+> **Pipeline completo de engenharia e visualização de dados para análise de competitividade e concentração do mercado brasileiro de fundos.**
 
-Nao tem API key, nao tem conta em cloud, nao tem segredo. Roda local, offline depois do primeiro fetch.
+Este projeto demonstra a construção de um ecossistema analítico que consome dados reais da **CVM (Comissão de Valores Mobiliários)** para mapear o panorama atual de fundos de investimento no Brasil. O foco está em transformar dados brutos em inteligência estratégica, utilizando métricas como o **Índice HHI** para avaliar a concentração de mercado.
 
----
-
-## Resultados reais (execucao com dados CVM + BCB)
-
-A ultima execucao contra os dados reais da CVM (maio/2026) revelou coisas que dado sintetico nenhum mostraria:
-
-- **46.810 fundos no cadastro da CVM. Apenas 22 ativos.**
-  Os outros 46.568 (99.5%) estao cancelados. O CSV bruto e 99.5% ruido — a primeira tarefa do analista e filtrar.
-
-- **FGTS concentra 83.8% do patrimonio liquido.**
-  O FI-FGTS, gerido pela Caixa, detem R$ 11.67 bilhoes. Isso deixa o HHI em 7.061 — mercado altamente concentrado. O segundo colocado (FII Macam Shopping) tem R$ 470 milhoes.
-
-- **FII domina em quantidade (7 dos 22 ativos).**
-  Mas o top 5 por PL e dominado por um unico fundo de um unico gestor. Quantidade != relevancia.
-
-- **CDI medio: 1.06% ao mes (ultimos 20 registros BCB).**
-  O benchmark que todo fundo tenta bater.
+[**🔗 Acesse o Dashboard no Hugging Face Spaces**](https://huggingface.co/spaces/RodrigoPresida/portfolio-fundos)
 
 ---
 
-## O que tem no notebook
+## 🛠️ Tecnologias e Ferramentas
 
-1. **Coleta de dados** — CVM, BCB e BrasilAPI. Se a API cair, tem fallback sintetico.
-2. **Limpeza e feature engineering** — normalizacao, tipagem, faixas de patrimonio, idade do fundo, metricas de eficiencia
-3. **Analise exploratoria** — distribuicao por classe, concentracao (HHI), correlacoes, top gestores
-4. **Visualizacoes interativas** — Plotly com tema escuro e paletas compativeis com daltonismo
-5. **Resultados reais** — secao com a execucao contra dados atuais da CVM e BCB
-6. **Escalando pra cloud** — arquitetura AWS conceitual (S3, Glue, Athena, QuickSight, Lambda) com justificativa de custo
-7. **Notas de acessibilidade** — praticas de alto contraste, alt-text e navegacao por teclado
-
----
-
-## Como rodar
-
-```bash
-git clone https://github.com/RodrigoPresida/portfolio-analytics-fundos.git
-cd portfolio-analytics-fundos
-
-python -m venv venv
-source venv/bin/activate      # Linux/Mac
-venv\Scripts\activate         # Windows
-
-pip install -r requirements.txt
-jupyter notebook notebook.ipynb
-```
-
-A primeira execucao baixa os dados das APIs publicas. Depois disso funciona offline (cache local de 6h).
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
+![Plotly](https://img.shields.io/badge/Plotly-239120?style=for-the-badge&logo=Plotly&logoColor=white)
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-yellow?style=for-the-badge)
 
 ---
 
-## Stack
+## 🚀 Desafios e Soluções
 
-| Biblioteca | Uso |
-|------------|-----|
-| pandas, numpy | manipulacao e analise |
-| requests | coleta das APIs |
-| plotly | visualizacao interativa |
-| matplotlib, seaborn | heatmap e graficos estaticos |
+### 1. Engenharia de Dados
+O processo começa com a extração de dados públicos (CSV) da CVM. O principal desafio foi o tratamento de volumes financeiros (Patrimônio Líquido) e a limpeza de metadados inconsistentes para garantir que a análise de idade e classe dos fundos fosse precisa.
 
----
+### 2. Análise Estratégica (Market Share)
+Além de visualizar o saldo total, o projeto implementa o cálculo do **Herfindahl-Hirschman Index (HHI)**, uma métrica de economia industrial usada para determinar quão competitivo ou concentrado é um determinado segmento (ex: Renda Fixa vs Multimercado).
 
-## Arquitetura cloud (conceitual)
-
-Como o pipeline evolui quando o volume de dados cresce e a automacao passa a ser necessaria:
-
-```mermaid
-graph LR
-    A[APIs Publicas] --> B[Lambda]
-    B --> C[S3 Raw]
-    C --> D[Glue]
-    D --> E[S3 Curated]
-    E --> F[Athena]
-    F --> G[QuickSight]
-    H[EventBridge] --> B
-```
-
-| Servico | Por que | Custo estimado/mes |
-|---------|--------|-------------------|
-| S3 | Storage barato, versionado, particionado | ~R$ 5 (10 GB) |
-| Lambda | Serverless, escala a zero, zero fixo | ~R$ 0 (free tier) |
-| Glue | Catalogo + ETL Spark, nativo com Athena | ~R$ 30 (2 DPU) |
-| Athena | SQL direto no S3, sem servidor | ~R$ 10 |
-| QuickSight | Dashboard com controle de acesso (IAM) | ~R$ 80 (autor) |
-| EventBridge | Cron serverless pros jobs diarios | ~R$ 0 |
+### 3. UI/UX & Storytelling
+O dashboard foi desenvolvido em Streamlit com injeção de **CSS customizado** para sair do visual padrão da biblioteca e entregar uma experiência profissional, com hierarquia visual clara e cards de KPI de alto impacto.
 
 ---
 
-## Acessibilidade
+## 📂 Estrutura do Repositório
 
-Todas as visualizacoes usam paletas de alto contraste (viridis, cividis). Cada grafico tem descricao textual. O notebook segue hierarquia de headings pra navegacao via leitor de tela. Fonte minima de 14pt.
-
-Nao e checklist — e como o projeto foi pensado desde o inicio.
-
----
-
-## Licenca
-
-MIT
+- `dashboard.py`: O coração da aplicação, contendo a lógica de visualização e estilos customizados.
+- `analise_real.py`: Script de processamento e saneamento dos dados brutos.
+- `data/`: Amostra dos dados processados (ativos).
+- `notebook.ipynb`: Exploração inicial e prototipagem das métricas de concentração.
 
 ---
 
-*Rodrigo Cruz dos Santos*
+## ⚙️ Como Executar
+
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/RodrigoPresida/portfolio-analytics-fundos.git
+   ```
+2. **Instale as dependências:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Rode o Dashboard:**
+   ```bash
+   streamlit run dashboard.py
+   ```
+
+---
+
+## 👤 Autor
+
+**Rodrigo Presida** — *AI Architect & Data Scientist*
+- [LinkedIn](https://www.linkedin.com/in/rodrigopresida)
+- [GitHub](https://github.com/RodrigoPresida)
+
+---
+*Este projeto faz parte de um portfólio focado em demonstrar a união entre Engenharia de Dados, Finanças e UX.*
