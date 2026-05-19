@@ -158,7 +158,20 @@ cdi_ref = 14.15
 # SIDEBAR
 # ═══════════════════════════════════════════════════
 with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Ita%C3%BA_Unibanco_logo.svg/512px-Ita%C3%BA_Unibanco_logo.svg.png", width=80)
+    # Logo Itaú com Fallback em HTML caso a imagem falhe
+    st.markdown(
+        f"""
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Ita%C3%BA_Unibanco_logo.svg/200px-Ita%C3%BA_Unibanco_logo.svg.png" 
+                 width="80" style="border-radius: 12px;" 
+                 onerror="this.style.display='none'; this.nextSibling.style.display='block';">
+            <div style="display:none; background-color:{ITA_LARANJA}; padding:15px; border-radius:10px;">
+                <span style="color:white; font-weight:bold; font-size:1.2rem;">Itaú</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     st.title("Asset Analytics")
     st.caption("Estratégia e Visão de Fundos")
     st.divider()
