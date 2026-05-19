@@ -6,13 +6,31 @@ Nao tem API key, nao tem conta em cloud, nao tem segredo. Roda local, offline de
 
 ---
 
+## Resultados reais (execucao com dados CVM + BCB)
+
+A ultima execucao contra os dados reais da CVM (maio/2026) revelou coisas que dado sintetico nenhum mostraria:
+
+- **46.810 fundos no cadastro da CVM. Apenas 22 ativos.**
+  Os outros 46.568 (99.5%) estao cancelados. O CSV bruto e 99.5% ruido — a primeira tarefa do analista e filtrar.
+
+- **FGTS concentra 83.8% do patrimonio liquido.**
+  O FI-FGTS, gerido pela Caixa, detem R$ 11.67 bilhoes. Isso deixa o HHI em 7.061 — mercado altamente concentrado. O segundo colocado (FII Macam Shopping) tem R$ 470 milhoes.
+
+- **FII domina em quantidade (7 dos 22 ativos).**
+  Mas o top 5 por PL e dominado por um unico fundo de um unico gestor. Quantidade != relevancia.
+
+- **CDI medio: 1.06% ao mes (ultimos 20 registros BCB).**
+  O benchmark que todo fundo tenta bater.
+
+---
+
 ## O que tem no notebook
 
 1. **Coleta de dados** — CVM, BCB e BrasilAPI. Se a API cair, tem fallback sintetico.
 2. **Limpeza e feature engineering** — normalizacao, tipagem, faixas de patrimonio, idade do fundo, metricas de eficiencia
 3. **Analise exploratoria** — distribuicao por classe, concentracao (HHI), correlacoes, top gestores
 4. **Visualizacoes interativas** — Plotly com tema escuro e paletas compativeis com daltonismo
-5. **Insights acionaveis** — tabela com recomendacoes e nivel de impacto
+5. **Resultados reais** — secao com a execucao contra dados atuais da CVM e BCB
 6. **Escalando pra cloud** — arquitetura AWS conceitual (S3, Glue, Athena, QuickSight, Lambda) com justificativa de custo
 7. **Notas de acessibilidade** — praticas de alto contraste, alt-text e navegacao por teclado
 
@@ -54,9 +72,9 @@ Como o pipeline evolui quando o volume de dados cresce e a automacao passa a ser
 ```mermaid
 graph LR
     A[APIs Publicas] --> B[Lambda]
-    B --> C[S3 — Raw]
+    B --> C[S3 Raw]
     C --> D[Glue]
-    D --> E[S3 — Curated]
+    D --> E[S3 Curated]
     E --> F[Athena]
     F --> G[QuickSight]
     H[EventBridge] --> B

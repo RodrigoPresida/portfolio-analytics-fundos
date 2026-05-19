@@ -8,3 +8,5 @@ venv/
 Thumbs.db
 storytelling.md
 lovable-streamlit-prompt.md
+data/
+analise_real.py
