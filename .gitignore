@@ -6,3 +6,5 @@ venv/
 .env
 .DS_Store
 Thumbs.db
+storytelling.md
+lovable-streamlit-prompt.md
