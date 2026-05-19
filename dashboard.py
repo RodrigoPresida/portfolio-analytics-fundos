@@ -1,6 +1,6 @@
 """
-Dashboard de Fundos de Investimento — Stack AWS
-Dados reais da CVM (maio/2026). Paleta Itaú. Streamlit + Plotly.
+Dashboard de Fundos de Investimento
+Dados reais da CVM (maio/2026). Streamlit + Plotly.
 """
 import streamlit as st
 import pandas as pd
@@ -21,19 +21,19 @@ st.set_page_config(
 )
 
 # ═══════════════════════════════════════════════════
-# PALETA ITAÚ
+# PALETA DE CORES
 # ═══════════════════════════════════════════════════
-ITAU_LARANJA = "#EC7000"
-ITAU_AZUL_ESCURO = "#003087"
-ITAU_AZUL_CLARO = "#106EB0"
-ITAU_CINZA = "#5C5C5C"
-BACKGROUND = "#080c14"
-CARD_BG = "#111827"
-TEXT_PRIMARY = "#F9FAFB"
-TEXT_MUTED = "#9CA3AF"
+LARANJA = "#EC7000"
+AZUL_ESCURO = "#003087"
+AZUL_CLARO = "#106EB0"
+CINZA = "#5C5C5C"
+BACKGROUND = "#FFFFFF"
+CARD_BG = "#F8F9FA"
+TEXT_PRIMARY = "#1E1E1E"
+TEXT_MUTED = "#6B7280"
 
 PALETTE = [
-    "#EC7000",  # laranja Itaú
+    "#EC7000",  # laranja
     "#106EB0",  # azul claro
     "#003087",  # azul escuro
     "#2CA02C",  # verde
@@ -45,7 +45,7 @@ PALETTE = [
 acessivel = px.colors.sequential.Viridis
 
 # ═══════════════════════════════════════════════════
-# CSS INJETADO (OVERLAY ESCURO)
+# CSS — TEMA CLARO
 # ═══════════════════════════════════════════════════
 st.markdown(f"""
 <style>
@@ -54,7 +54,7 @@ st.markdown(f"""
     }}
     .stMetric {{
         background-color: {CARD_BG} !important;
-        border: 1px solid #1e293b !important;
+        border: 1px solid #E5E7EB !important;
         border-radius: 12px !important;
         padding: 16px !important;
     }}
@@ -62,12 +62,12 @@ st.markdown(f"""
         color: {TEXT_MUTED} !important;
     }}
     .stMetric [data-testid="stMetricValue"] {{
-        color: {ITAU_LARANJA} !important;
+        color: {LARANJA} !important;
         font-size: 2rem !important;
     }}
     section[data-testid="stSidebar"] {{
-        background-color: #0d1320 !important;
-        border-right: 1px solid #1e293b !important;
+        background-color: #F3F4F6 !important;
+        border-right: 1px solid #E5E7EB !important;
     }}
     .stSelectbox label, .stSlider label {{
         color: {TEXT_MUTED} !important;
@@ -80,7 +80,7 @@ st.markdown(f"""
     }}
     .stDataFrame {{
         background-color: {CARD_BG} !important;
-        border: 1px solid #1e293b !important;
+        border: 1px solid #E5E7EB !important;
         border-radius: 12px !important;
     }}
 </style>
@@ -126,7 +126,6 @@ with st.sidebar:
     gestores_disponiveis = sorted(df["gestor"].dropna().unique())
     gestor_sel = st.multiselect("Gestor", gestores_disponiveis, default=gestores_disponiveis)
     st.divider()
-    st.caption("Paleta Itaú · Alto contraste · Alt-text em gráficos")
 
 # Aplicar filtros
 mask = (
@@ -179,13 +178,11 @@ with tab1:
             )
             fig.update_traces(textfont_size=14, textposition="outside", marker_line_width=0)
             fig.update_layout(
-                template="plotly_dark",
+                template="plotly_white",
                 font=dict(size=14),
                 title=dict(x=0.5, font=dict(size=18)),
                 margin=dict(l=20, r=20, t=50, b=20),
                 height=400,
-                paper_bgcolor=BACKGROUND,
-                plot_bgcolor=BACKGROUND,
             )
             st.plotly_chart(fig, use_container_width=True)
             st.caption("Alt-text: barras horizontais com quantidade de fundos em cada classe de investimento")
@@ -207,11 +204,10 @@ with tab1:
             )
             fig.update_traces(texttemplate="%{label}<br>R$ %{value:.1f}B", textfont_size=14)
             fig.update_layout(
-                template="plotly_dark",
+                template="plotly_white",
                 title=dict(x=0.5, font=dict(size=18)),
                 margin=dict(l=20, r=20, t=50, b=20),
                 height=400,
-                paper_bgcolor=BACKGROUND,
             )
             st.plotly_chart(fig, use_container_width=True)
             st.caption("Alt-text: treemap mostrando a concentração de patrimônio líquido por classe de fundo")
@@ -236,15 +232,13 @@ with tab1:
             log_y=True,
         )
         fig.update_layout(
-            template="plotly_dark",
+            template="plotly_white",
             font=dict(size=14),
             title=dict(x=0.5, font=dict(size=18)),
             xaxis_title="Idade (anos)",
             yaxis_title="PL (R$ milhões) — escala log",
             margin=dict(l=20, r=20, t=50, b=20),
             height=450,
-            paper_bgcolor=BACKGROUND,
-            plot_bgcolor=BACKGROUND,
             legend=dict(orientation="h", y=1.15),
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -274,13 +268,11 @@ with tab2:
             )
             fig.update_traces(textfont_size=13, textposition="outside", texttemplate="R$ %{x:.2f}B")
             fig.update_layout(
-                template="plotly_dark",
+                template="plotly_white",
                 font=dict(size=14),
                 title=dict(x=0.5, font=dict(size=18)),
                 margin=dict(l=20, r=20, t=50, b=20),
                 height=400,
-                paper_bgcolor=BACKGROUND,
-                plot_bgcolor=BACKGROUND,
             )
             st.plotly_chart(fig, use_container_width=True)
             st.caption("Alt-text: barras horizontais com patrimônio líquido total por gestor")
@@ -313,14 +305,12 @@ with tab2:
                 texttemplate="%{x:.1f}%", marker_line_width=0,
             )
             fig.update_layout(
-                template="plotly_dark",
+                template="plotly_white",
                 font=dict(size=14),
                 title=dict(x=0.5, font=dict(size=18)),
                 xaxis_title="% do PL Total",
                 margin=dict(l=20, r=20, t=50, b=20),
                 height=400,
-                paper_bgcolor=BACKGROUND,
-                plot_bgcolor=BACKGROUND,
             )
             st.plotly_chart(fig, use_container_width=True)
             st.caption("Alt-text: barras horizontais com percentual do patrimônio líquido total por gestor")
