@@ -1,6 +1,6 @@
 """
-Dashboard de Fundos de Investimento — Portfólio Pessoal 📊
-Design profissional e neutro para análise de ativos.
+Dashboard de Fundos de Investimento — Analytics Pro 📊
+Design de alto impacto visual focado em Data Storytelling.
 """
 import streamlit as st
 import pandas as pd
@@ -14,26 +14,27 @@ from datetime import datetime
 # CONFIGURAÇÃO DA PÁGINA
 # ═══════════════════════════════════════════════════
 st.set_page_config(
-    page_title="Asset Analytics — Portfólio",
+    page_title="Asset Analytics — Rodrigo Presida",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 # ═══════════════════════════════════════════════════
-# PALETA DE CORES — PROFISSIONAL NEUTRA
+# PALETA DE CORES — IMPACTO (VIBRANTE)
 # ═══════════════════════════════════════════════════
-COLOR_PRIMARY = "#1E40AF"  # Azul Royal Profundo
-COLOR_SECONDARY = "#3B82F6" # Azul Vibrante
-COLOR_ACCENT = "#6366F1"    # Indigo
-BACKGROUND_PAGE = "#F8FAFC"
+COLOR_BRAND = "#FF6200"     # Laranja Principal
+COLOR_NAVY = "#000B40"      # Azul Marinho Profundo
+COLOR_BLUE = "#0520B7"      # Azul Vibrante
+COLOR_GOLD = "#FA9F09"      # Ouro
+BACKGROUND_PAGE = "#F4F5F7"
 CARD_WHITE = "#FFFFFF"
-TEXT_DARK = "#0F172A"
+TEXT_DARK = "#1E1E1E"
 
-NEUTRAL_PALETTE = [COLOR_PRIMARY, COLOR_SECONDARY, COLOR_ACCENT, "#10B981", "#F59E0B", "#EF4444"]
+VIBRANT_PALETTE = [COLOR_BRAND, COLOR_BLUE, COLOR_GOLD, "#02036C", "#1F8102", "#FBC305"]
 
 # ═══════════════════════════════════════════════════
-# CUSTOM CSS — MODERN UI/UX
+# CUSTOM CSS — PREMIUM UI/UX
 # ═══════════════════════════════════════════════════
 st.markdown(f"""
 <style>
@@ -49,7 +50,7 @@ st.markdown(f"""
 
     /* Sidebar Custom */
     section[data-testid="stSidebar"] {{
-        background-color: #0F172A !important;
+        background-color: {COLOR_NAVY} !important;
         color: white !important;
     }}
     section[data-testid="stSidebar"] .stMarkdown, section[data-testid="stSidebar"] label {{
@@ -61,19 +62,19 @@ st.markdown(f"""
         background-color: {CARD_WHITE};
         border-radius: 12px;
         padding: 20px;
-        border-top: 4px solid {COLOR_PRIMARY};
+        border-left: 5px solid {COLOR_BRAND};
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         margin-bottom: 10px;
     }}
     .metric-label {{
-        color: #64748B;
-        font-size: 0.85rem;
+        color: #6B7280;
+        font-size: 0.9rem;
         font-weight: 600;
         text-transform: uppercase;
         margin-bottom: 5px;
     }}
     .metric-value {{
-        color: {TEXT_DARK};
+        color: {COLOR_NAVY};
         font-size: 1.8rem;
         font-weight: 700;
     }}
@@ -87,13 +88,13 @@ st.markdown(f"""
         color: #64748B;
     }}
     .stTabs [aria-selected="true"] {{
-        color: {COLOR_PRIMARY} !important;
-        border-bottom: 2px solid {COLOR_PRIMARY} !important;
+        color: {COLOR_BRAND} !important;
+        border-bottom: 2px solid {COLOR_BRAND} !important;
     }}
 
     /* Headers */
     h1, h2, h3 {{
-        color: {TEXT_DARK} !important;
+        color: {COLOR_NAVY} !important;
         font-weight: 700 !important;
     }}
 </style>
@@ -121,7 +122,7 @@ def carregar_dados():
     except:
         return pd.DataFrame({
             'denom_social': ['Fundo Exemplo'], 'classe': ['Renda Fixa'],
-            'vl_patrim_liq': [1e9], 'idade_anos': [5], 'gestor': ['Gestora Alpha'],
+            'vl_patrim_liq': [1e9], 'idade_anos': [5], 'gestor': ['Gestora Global'],
             'pl_milhoes': [1000], 'taxa_adm': [1.0], 'rentab_fundo': [12.5]
         })
     
@@ -148,7 +149,7 @@ with st.sidebar:
     pl_range = st.slider("PL (R$ Milhões)", 0, int(df["pl_milhoes"].max()), (0, int(df["pl_milhoes"].max())))
     
     st.divider()
-    st.caption("Portfólio de Rodrigo Presida")
+    st.caption("Engenharia de Dados por Rodrigo Presida")
 
 mask = (df["classe"].isin(classe_sel)) & (df["pl_milhoes"].between(pl_range[0], pl_range[1]))
 df_filtrado = df[mask].copy()
@@ -156,8 +157,8 @@ df_filtrado = df[mask].copy()
 # ═══════════════════════════════════════════════════
 # HEADER
 # ═══════════════════════════════════════════════════
-st.title("Dashboard de Fundos de Investimento")
-st.caption("Análise quantitativa baseada em dados públicos da CVM.")
+st.title("Panorama de Mercado: Fundos de Investimento")
+st.caption("Exploração quantitativa de ativos e concentração de mercado.")
 
 col1, col2, col3, col4 = st.columns(4)
 with col1: custom_metric("Total de Fundos", f"{len(df_filtrado):,}")
@@ -170,36 +171,42 @@ st.markdown("<br>", unsafe_allow_html=True)
 # ═══════════════════════════════════════════════════
 # DASHBOARD BODY
 # ═══════════════════════════════════════════════════
-tab1, tab2, tab3 = st.tabs(["📊 Visão Geral", "🏢 Análise de Gestores", "📋 Dados Brutos"])
+tab1, tab2, tab3 = st.tabs(["📊 Inteligência de Mercado", "🏢 Análise de Players", "📋 Base de Dados"])
 
 with tab1:
     c1, c2 = st.columns([1, 1])
     
     with c1:
-        st.subheader("Distribuição por Classe")
+        st.subheader("Concentração por Classe")
         dist = df_filtrado["classe"].value_counts().reset_index()
         dist.columns = ["Classe", "Quantidade"]
         fig = px.bar(dist, x="Quantidade", y="Classe", orientation='h', 
-                     color="Quantidade", color_continuous_scale="Blues")
+                     color="Quantidade", color_continuous_scale=[[0, COLOR_NAVY], [1, COLOR_BRAND]])
         fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", xaxis_title="Nº de Fundos", yaxis_title="")
         st.plotly_chart(fig, use_container_width=True)
 
     with c2:
-        st.subheader("Concentração de Patrimônio")
+        st.subheader("Distribuição de Patrimônio")
         pl_classe = df_filtrado.groupby("classe")["vl_patrim_liq"].sum().reset_index()
         fig = px.treemap(pl_classe, path=["classe"], values="vl_patrim_liq",
-                         color="vl_patrim_liq", color_continuous_scale="Blues")
+                         color="vl_patrim_liq", color_continuous_scale=[[0, COLOR_BLUE], [1, COLOR_BRAND]])
         st.plotly_chart(fig, use_container_width=True)
 
+    st.subheader("Relação Patrimônio vs Maturidade do Fundo")
+    fig = px.scatter(df_filtrado, x="idade_anos", y="pl_milhoes", color="classe", 
+                     size="pl_milhoes", size_max=40, color_discrete_sequence=VIBRANT_PALETTE)
+    fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+    st.plotly_chart(fig, use_container_width=True)
+
 with tab2:
-    st.subheader("Top 10 Gestores por Patrimônio")
+    st.subheader("Top 10 Gestores por Patrimônio Líquido")
     top_gestores = df_filtrado.groupby("gestor")["vl_patrim_liq"].sum().nlargest(10).reset_index()
-    fig = px.bar(top_gestores, x="vl_patrim_liq", y="gestor", orientation='h', color_discrete_sequence=[COLOR_PRIMARY])
-    fig.update_layout(yaxis={'categoryorder':'total ascending'}, plot_bgcolor="rgba(0,0,0,0)", xaxis_title="Patrimônio Líquido")
+    fig = px.bar(top_gestores, x="vl_patrim_liq", y="gestor", orientation='h', color_discrete_sequence=[COLOR_BRAND])
+    fig.update_layout(yaxis={'categoryorder':'total ascending'}, plot_bgcolor="rgba(0,0,0,0)", xaxis_title="Patrimônio Total")
     st.plotly_chart(fig, use_container_width=True)
 
 with tab3:
-    st.subheader("Base de Dados Completa")
+    st.subheader("Explorador de Dados Brutos")
     st.dataframe(df_filtrado[["denom_social", "gestor", "classe", "pl_milhoes"]]
                  .sort_values("pl_milhoes", ascending=False), 
                  use_container_width=True, hide_index=True)
@@ -208,7 +215,7 @@ with tab3:
 # FOOTER
 # ═══════════════════════════════════════════════════
 st.markdown(f"""
-    <div style="text-align: center; color: #64748B; padding: 20px; font-size: 0.8rem;">
-        Análise de Dados Financeiros | Rodrigo Presida | {datetime.now().year}
+    <div style="text-align: center; color: {COLOR_NAVY}; padding: 20px; font-size: 0.8rem; font-weight: 600;">
+        Portfolio Rodrigo Presida | Análise de Ativos Financeiros | {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
