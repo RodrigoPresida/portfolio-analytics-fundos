@@ -200,8 +200,9 @@ with tab1:
     with c1:
         st.subheader("Concentração por Classe")
         dist = df_filtrado["classe"].value_counts().reset_index()
-        fig = px.bar(dist, x="count", y="index", orientation='h', 
-                     color="count", color_continuous_scale=[[0, ITA_AZUL_PROFUNDO], [1, ITA_LARANJA]])
+        dist.columns = ["Classe", "Quantidade"]
+        fig = px.bar(dist, x="Quantidade", y="Classe", orientation='h', 
+                     color="Quantidade", color_continuous_scale=[[0, ITA_AZUL_PROFUNDO], [1, ITA_LARANJA]])
         fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", 
                           xaxis_title="Qtd Fundos", yaxis_title="", showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
