@@ -1,22 +1,20 @@
-# Rascunho — Postagem LinkedIn (até 1200 caracteres)
+# Rascunho — Postagem LinkedIn (ate 1200 caracteres)
 
 ---
 
-🚀 Dados públicos + Python + AWS: o combo que todo analista de portfólio precisa dominar.
+Dados publicos + Python + AWS: montei um estudo sobre o mercado de fundos brasileiro que vai da coleta ate a nuvem.
 
-Montei um projeto portfólio que coleta dados reais de fundos de investimento da CVM, BCB e BrasilAPI, faz ETL completo em Python e entrega visualizações interativas com Plotly — tudo rodando 100% local, sem chave de API, sem cloud.
+O notebook coleta dados reais da CVM, BCB e BrasilAPI, faz ETL completo, analise exploratoria e visualizacoes interativas com Plotly — tudo rodando local, sem API key, sem cloud. Mas a parte que eu mais gostei de fazer foi a discussao sobre como esse pipeline escala: S3, Glue, Athena, QuickSight. O tipo de arquitetura que transforma CSV em Data Lake com governanca.
 
-O pulo do gato? Tem uma seção inteira mostrando como esse pipeline escalaria na stack AWS usada pelo Itaú: S3 → Glue → Athena → QuickSight. O tipo de arquitetura que transforma planilha em Data Lake com governança.
+O que tem la:
+- Coleta modular com fallback (API caiu? nao quebra)
+- EDA com metricas de negocio e benchmark CDI
+- Graficos interativos com acessibilidade (alto contraste, alt-text)
+- Arquitetura AWS conceitual com justificativa de custo
+- Acessibilidade como principio, nao como checklist
 
-📊 O que fiz:
-✅ Coleta modular com fallback (resiliência real)
-✅ EDA com métricas de negócio e benchmark CDI
-✅ Gráficos interativos acessíveis (alto contraste, alt-text)
-✅ Arquitetura AWS conceitual com justificativa de custo
-✅ Alinhamento com os valores do Itaú: pluralidade, acessibilidade, democratização de dados
+Ta aberto no GitHub:
 
-O notebook está aberto no GitHub. Se quiser rodar você mesmo:
+github.com/RodrigoPresida/portfolio-analytics-fundos
 
-🔗 github.com/RodrigoPresida/portfolio-analytics-fundos
-
-#Python #AWS #DataAnalytics #FundosDeInvestimento #OpenSource #DadosPublicos #PcD #Itaú #CarreiraTech #PortfolioDataScience
+#Python #AWS #DataAnalytics #FundosDeInvestimento #OpenSource #DadosPublicos #Acessibilidade #DataScience
