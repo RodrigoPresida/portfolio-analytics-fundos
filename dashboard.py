@@ -174,13 +174,15 @@ with tab1:
                 text_auto=True,
                 color="Qtd",
                 color_continuous_scale=acessivel,
-                title="Quantidade de Fundos por Classe",
             )
             fig.update_traces(textfont_size=14, textposition="outside", marker_line_width=0)
             fig.update_layout(
                 template="plotly_white",
                 font=dict(size=14),
-                title=dict(x=0.5, font=dict(size=18)),
+                title=dict(
+                    text="<span style='color:#EC7000'><b>Quantidade</b></span> de Fundos por Classe",
+                    x=0.5, font=dict(size=18),
+                ),
                 margin=dict(l=20, r=20, t=50, b=20),
                 height=400,
             )
@@ -205,7 +207,10 @@ with tab1:
             fig.update_traces(texttemplate="%{label}<br>R$ %{value:.1f}B", textfont_size=14)
             fig.update_layout(
                 template="plotly_white",
-                title=dict(x=0.5, font=dict(size=18)),
+                title=dict(
+                    text="<span style='color:#EC7000'><b>PL</b></span> por Classe (R$ Bilhões)",
+                    x=0.5, font=dict(size=18),
+                ),
                 margin=dict(l=20, r=20, t=50, b=20),
                 height=400,
             )
@@ -227,14 +232,16 @@ with tab1:
             size_max=55,
             hover_name="denom_social",
             hover_data={"gestor": True, "classe": False, "pl_milhoes": ":.1f"},
-            title="Patrimônio Líquido vs Idade do Fundo",
             color_discrete_sequence=PALETTE,
             log_y=True,
         )
         fig.update_layout(
             template="plotly_white",
             font=dict(size=14),
-            title=dict(x=0.5, font=dict(size=18)),
+            title=dict(
+                text="<span style='color:#EC7000'><b>Patrimônio</b></span> Líquido vs Idade do Fundo",
+                x=0.5, font=dict(size=18),
+            ),
             xaxis_title="Idade (anos)",
             yaxis_title="PL (R$ milhões) — escala log",
             margin=dict(l=20, r=20, t=50, b=20),
@@ -264,13 +271,15 @@ with tab2:
                 text_auto=".2f",
                 color="PL_Bilhoes",
                 color_continuous_scale=acessivel,
-                title="Top 10 Gestores por PL",
             )
             fig.update_traces(textfont_size=13, textposition="outside", texttemplate="R$ %{x:.2f}B")
             fig.update_layout(
                 template="plotly_white",
                 font=dict(size=14),
-                title=dict(x=0.5, font=dict(size=18)),
+                title=dict(
+                    text="<span style='color:#EC7000'><b>Top 10</b></span> Gestores por PL",
+                    x=0.5, font=dict(size=18),
+                ),
                 margin=dict(l=20, r=20, t=50, b=20),
                 height=400,
             )
@@ -298,7 +307,6 @@ with tab2:
                 text_auto=".1f",
                 color="Share_%",
                 color_continuous_scale=acessivel,
-                title="Market Share por Gestor",
             )
             fig.update_traces(
                 textfont_size=13, textposition="outside",
@@ -307,7 +315,10 @@ with tab2:
             fig.update_layout(
                 template="plotly_white",
                 font=dict(size=14),
-                title=dict(x=0.5, font=dict(size=18)),
+                title=dict(
+                    text="<span style='color:#EC7000'><b>Market Share</b></span> por Gestor",
+                    x=0.5, font=dict(size=18),
+                ),
                 xaxis_title="% do PL Total",
                 margin=dict(l=20, r=20, t=50, b=20),
                 height=400,
