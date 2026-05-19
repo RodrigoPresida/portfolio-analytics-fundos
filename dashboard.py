@@ -227,17 +227,19 @@ with tab1:
             y="pl_milhoes",
             color="classe",
             size="pl_milhoes",
+            size_max=55,
             hover_name="denom_social",
-            hover_data={"gestor": True, "classe": False, "pl_milhoes": False},
+            hover_data={"gestor": True, "classe": False, "pl_milhoes": ":.1f"},
             title="Patrimônio Líquido vs Idade do Fundo",
             color_discrete_sequence=PALETTE,
+            log_y=True,
         )
         fig.update_layout(
             template="plotly_dark",
             font=dict(size=14),
             title=dict(x=0.5, font=dict(size=18)),
             xaxis_title="Idade (anos)",
-            yaxis_title="PL (R$ milhões)",
+            yaxis_title="PL (R$ milhões) — escala log",
             margin=dict(l=20, r=20, t=50, b=20),
             height=450,
             paper_bgcolor=BACKGROUND,
@@ -245,7 +247,7 @@ with tab1:
             legend=dict(orientation="h", y=1.15),
         )
         st.plotly_chart(fig, use_container_width=True)
-        st.caption("Alt-text: dispersão do patrimônio líquido contra idade, colorido por classe. Pontos maiores indicam maior PL")
+        st.caption("Alt-text: dispersão do patrimônio líquido contra idade, colorido por classe. Escala logarítmica no eixo Y para lidar com a concentração do FI-FGTS")
     else:
         st.warning("Dados insuficientes para o gráfico de dispersão.")
 
@@ -288,32 +290,39 @@ with tab2:
         st.subheader("Market Share")
         if len(df_filtrado) > 0:
             total_pl = df_filtrado["vl_patrim_liq"].sum()
-            share = df_filtrado.groupby("gestor")["vl_patrim_liq"].sum().sort_values(ascending=False).head(8)
+            share = df_filtrado.groupby("gestor")["vl_patrim_liq"].sum().sort_values(ascending=True)
             share_pct = (share / total_pl * 100).reset_index()
             share_pct.columns = ["Gestor", "Share_%"]
-            share_pct["Outros"] = 100 - share_pct["Share_%"].sum()
-            share_pct = pd.concat([
-                share_pct[share_pct["Gestor"] != "Outros"],
-                pd.DataFrame([{"Gestor": "Demais", "Share_%": share_pct["Outros"].iloc[0] if share_pct["Outros"].iloc[-1] > 0 else 0}])
-            ]).reset_index(drop=True)
-
-            fig = px.pie(
-                share_pct,
-                names="Gestor",
-                values="Share_%",
-                title="Market Share por Gestor",
-                color_discrete_sequence=PALETTE,
+            # Agrupa gestores < 2% como "Demais"
+            share_pct["label"] = share_pct.apply(
+                lambda r: r["Gestor"] if r["Share_%"] >= 2 else "Demais", axis=1
             )
-            fig.update_traces(textinfo="label+percent", textfont_size=12)
+            share_agg = share_pct.groupby("label")["Share_%"].sum().sort_values().reset_index()
+
+            fig = px.bar(
+                share_agg,
+                x="Share_%", y="label", orientation="h",
+                text_auto=".1f",
+                color="Share_%",
+                color_continuous_scale=acessivel,
+                title="Market Share por Gestor",
+            )
+            fig.update_traces(
+                textfont_size=13, textposition="outside",
+                texttemplate="%{x:.1f}%", marker_line_width=0,
+            )
             fig.update_layout(
                 template="plotly_dark",
+                font=dict(size=14),
                 title=dict(x=0.5, font=dict(size=18)),
+                xaxis_title="% do PL Total",
                 margin=dict(l=20, r=20, t=50, b=20),
                 height=400,
                 paper_bgcolor=BACKGROUND,
+                plot_bgcolor=BACKGROUND,
             )
             st.plotly_chart(fig, use_container_width=True)
-            st.caption("Alt-text: gráfico de pizza com a fatia de mercado de cada gestor")
+            st.caption("Alt-text: barras horizontais com percentual do patrimônio líquido total por gestor")
         else:
             st.warning("Dados insuficientes para market share.")
 
